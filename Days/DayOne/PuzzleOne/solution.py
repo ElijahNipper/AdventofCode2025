@@ -1,4 +1,3 @@
-
 #Regex is useful for splitting the string
 import re
 
@@ -22,7 +21,7 @@ for line in lines:
     #Uses the modulo operator to provide circular addition/subtraction. Throws an error if first character isnt right or left
     if (direction == right):
         lockValue = (lockValue + distance) % numDials
-    elif ([direction == left]):
+    elif (direction == left):
         lockValue = (lockValue - distance) % numDials
     else:
          raise ValueError("Invalid Direction!")
