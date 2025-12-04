@@ -10,47 +10,39 @@ joltageLen = 12
 joltageSums = 0
 
 for line in lines:
-    print(line)
     lineLen = len(line)
-    zeroLine = "0" * lineLen
 
-    charsFound = 0
-    indices = []
+    maxJoltage = ["0"]
 
-    for i in range(9, 0, -1):
-        if charsFound >= joltageLen - 1:
-            break
-        values = [index for index, number in enumerate(line) if number == str(i)]
-        
-        if (len(values) != 0):
-            indices.append(values)
+    for i in range(lineLen):
+        intsLeft = lineLen - i
+        startIndex = joltageLen - intsLeft
+        if startIndex < 0:
+            startIndex = 0
 
-        charsFound += len(values)
+        currInt = int(line[i])
 
-    zeroList = list(zeroLine)
+        appended = False
 
-    charsPlaced = 0
-
-    for indexArray in indices:
-        if (charsPlaced == joltageLen):
-            break
-        indexArray.reverse()
-        
-        for index in indexArray:
-            if (charsPlaced == joltageLen):
+        for j in range(startIndex, len(maxJoltage)):
+            currIntTwo = int(maxJoltage[j])
+            
+            if (currInt > currIntTwo):
+                for k in range(len(maxJoltage) - j):
+                    maxJoltage.pop()
+                maxJoltage.append(str(currInt))
+                appended = True
                 break
-            zeroList[index] = line[index]
-            charsPlaced += 1
+            
+        if (appended == False and len(maxJoltage) < joltageLen):
+            maxJoltage.append(str(currInt))
 
-    zeroList = [number for number in zeroList if number != "0"]
+    finalStringValue = ""
 
-    maxNum = ""
+    for voltage in maxJoltage:
+        finalStringValue += voltage
 
-    for number in zeroList:
-        maxNum += number
-
-    maxNum = int(maxNum)
-    print(maxNum)
-    exit()
+    maxJoltageInt = int(finalStringValue)
+    joltageSums += maxJoltageInt
 
 print("Max sum = " + str(joltageSums))
