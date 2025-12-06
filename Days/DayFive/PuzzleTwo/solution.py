@@ -18,6 +18,7 @@ class rangeObject:
     def __init__(self, start, end):
         self.start = start
         self.end = end
+        self.skipped = False
 
 objectRanges = []
 
@@ -37,7 +38,7 @@ for rangeString in ranges:
 #         currStart = currObj.start
 #         currEnd = currObj.end 
 
-#         for j in range(i + i, len(objectRanges)):
+#         for j in range(i + 1, len(objectRanges)):
 #             currObj2 = objectRanges[j]
 #             currStart2 = currObj2.start
 #             currEnd2 = currObj2.end
@@ -49,20 +50,31 @@ for rangeString in ranges:
 for obj in objectRanges:
     print("Start: " + str(obj.start) + " End: " + str(obj.end))
 
+lowest = objectRanges[0].start
+highest = objectRanges[0].start
+
+for obj in objectRanges:
+    if obj.start < lowest:
+         lowest = obj.start
+    if obj.end > highest:
+         highest = obj.end
+
 changed = True
 
 #Figure out why some strings have zero in them. Also when to use or not use the >= or <= signs. Thanks future me!
+#Are strings still getting used after being skipped? weird
 while (changed):
 
     changed = False
 
-    for i in range(len(objectRanges)):
-            #print(i)
+    #CHANGE THIS BACK FROM -1 IF ITS CAUSING ERRORS
+    for i in range(0, len(objectRanges)):
+            print(i)
             currObj = objectRanges[i]
             currStart = currObj.start
             currEnd = currObj.end 
 
-            if (currStart == 0 or currEnd == 0):
+            if (currObj.skipped):
                     continue
 
             #print(str(currStart) + " - " + str(currEnd) + " comparing against: ")
@@ -74,45 +86,58 @@ while (changed):
 
                 #print(str(currStart2) + " - " + str(currEnd2))
 
-                if (currStart2 == 0 or currEnd2 == 0):
+                if (currObj2.skipped):
                     continue
 
-                if currStart == currStart2 and currEnd == currEnd2:
-                    currObj2.start = 0
-                    currObj2.end = 0
-                    changed = True
+                # if currStart == currStart2 and currEnd == currEnd2:
+                #     currObj2.start = 0
+                #     currObj2.end = 0
+                #     changed = True
 
                 if currStart >= currStart2 and currEnd <= currEnd2:
-                    currObj.start = currObj2.start
-                    currObj.end = currObj2.end
-                    currObj2.start = 0
-                    currObj2.end = 0
+                    #currObj.start = currObj2.start
+                    #currObj.end = currObj2.end
+                    currObj.start =  min(currObj.start, currObj2.start)
+                    currObj.end =  max(currObj.end, currObj2.end)
+                    #currObj2.start = 0
+                    #currObj2.end = 0
+                    currObj2.skipped = True
                     changed = True
                     #print(1)
-                if currStart >= currStart2 and currEnd >= currEnd2:
+                elif currStart >= currStart2 and currEnd >= currEnd2:
                     if currStart <= currEnd2:
-                        currObj.start = currObj2.start
-                        currObj2.start = 0
-                        currObj2.end = 0
+                        #currObj.start = currObj2.start
+                        currObj.start =  min(currObj.start, currObj2.start)
+                        currObj.end =  max(currObj.end, currObj2.end)
+                        #currObj2.start = 0
+                        #currObj2.end = 0
+                        currObj2.skipped = True
                         changed = True
                         #print(2)
                     #print(5)
-                if currStart <= currStart2 and currEnd <= currEnd2:
+                elif currStart <= currStart2 and currEnd <= currEnd2:
                     if currEnd >= currStart2:
-                        currObj.end = currObj2.end
-                        currObj2.start = 0
-                        currObj2.end = 0
+                        #currObj.end = currObj2.end
+                        currObj.start =  min(currObj.start, currObj2.start)
+                        currObj.end =  max(currObj.end, currObj2.end)
+                        #currObj2.start = 0
+                        #currObj2.end = 0
+                        currObj2.skipped = True
                         changed = True
                         #print(3)
                     #print(6)
-                if currStart <= currStart2 and currEnd >= currEnd2:
-                    currObj2.start = 0
-                    currObj2.end = 0
+                elif currStart <= currStart2 and currEnd >= currEnd2:
+                    #currObj2.start = 0
+                    #currObj2.end = 0
+                    currObj.start =  min(currObj.start, currObj2.start)
+                    currObj.end =  max(currObj.end, currObj2.end)
+                    currObj2.skipped = True
                     changed = True
                     #print(4)
             #print("-------")
 
-objectRanges = [x for x in objectRanges if x.start + x.end != 0]
+#THIS STOPS FROM SEEING IF WE HAVE ANY VALUES WEIRDLY ONLY GETTING ONE ZERO. REVERT IF CAUSING ERRORS
+objectRanges = [x for x in objectRanges if x.skipped == False]
 
 #Get our total number of valid ingredient IDs
 validIds = 0
@@ -121,7 +146,18 @@ for obj in objectRanges:
     rangeIncl = (obj.end + 1) - obj.start
     validIds += rangeIncl
     print("Start: " + str(obj.start) + " End: " + str(obj.end))
+
+#NOTHING IS REPEATING?
+for i in range(0, len(objectRanges)):
+    currObj = objectRanges[i]
+    for j in range(i + 1, len(objectRanges)):
+        currObj2 = objectRanges[j]
+
+        if currObj.start == currObj2.start or currObj.end == currObj2.end:
+                print("Problem!")
         
+print("Lowest: " + str(lowest) + " Highest: " + str(highest))
+print("Max number ids: " + str((highest + 1) - lowest))
 
 #Prints the sum total of fresh ingredients
 print("Fresh ingredients: " + str(validIds))
