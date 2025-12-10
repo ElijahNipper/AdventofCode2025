@@ -45,5 +45,5 @@ This one was really fun! The first part was really simple and fun to visualize. 
 ### Day 8
 I got off work today so I got to spend extra time working on my solutions, and boy did I need it. I had to basically relearn Union Find / Disjoint Set as I don't think I'd used it since my data structures class. I also got too excited about writing a custom class for my first solution that I built out a whole class and dictionary system before realizing that it didn't really help me. At least the second solution was relatively easy!
 
-### Day 8
+### Day 9
 An uno reverse compared to yesterday. The first part was really easy, but I wasn't able to figure out part 2 without looking for help. It's getting to that part of advent of code where I struggle to independently come up with my solutions, but I hope to still learn something from this puzzle. This one taught me about flood fill, rasterization, and coordinate compression!
